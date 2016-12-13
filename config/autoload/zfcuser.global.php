@@ -5,7 +5,7 @@
 
 return [
     'zfcuser' => [
-        'user_entity_class' => 'Application\Entity\User',
+        'user_entity_class' => 'Usuarios\Entity\User',
         'enable_default_entities' => false
     ]
 ];

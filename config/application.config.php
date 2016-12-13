@@ -17,6 +17,7 @@ return array(
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
         'Application',
+        'Usuarios',
         'Administration',
         'MailTemplates',
         'MailPartials',
