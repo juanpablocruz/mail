@@ -36,4 +36,16 @@ class Module implements AutoloaderProviderInterface
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'currentRequest' => function($sm) {
+                    $helper = new Helper\CurrentRequest;
+                    return $helper;
+                }
+            )
+        );
+    }
 }

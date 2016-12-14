@@ -8,6 +8,7 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'showMessages' => 'MailPartials\View\Helper\ShowMessages',
+            'currentRequest' => 'MailPartials\Helper\CurrentRequestHelper'
         ),
     ),
     'router' => array(
