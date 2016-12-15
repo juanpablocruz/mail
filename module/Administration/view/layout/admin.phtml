@@ -1,5 +1,4 @@
 <?php echo $this->doctype(); ?>
-
 <html lang="en">
 <head>
     <?php echo $this->headTitle('LaCueva Panel ')->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -7,7 +6,6 @@
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
-
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <?php echo $this->headTitle('LaCueva Panel')->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -16,41 +14,46 @@
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
     <?php echo $this->headLink()
         ->prependStylesheet($this->basePath('panel/css/vendor.css'))
         ->prependStylesheet($this->basePath('panel/css/app.css')) ?>
-    <?php echo $this->headScript();?>
+    <?php echo $this->headScript(); ?>
 </head>
 
 <body>
 <div class="main-wrapper">
     <div class="app" id="app">
         <header class="header">
-            <div class="header-block header-block-collapse hidden-lg-up"><button class="collapse-btn" id="sidebar-collapse-btn">
+            <div class="header-block header-block-collapse hidden-lg-up">
+                <button class="collapse-btn" id="sidebar-collapse-btn">
                     <i class="fa fa-bars"></i>
-                </button></div>
+                </button>
+            </div>
             <div class="header-block header-block-nav">
                 <ul class="nav-profile">
-
                     <li class="profile dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div class="img" style="background-image: url('https://avatars2.githubusercontent.com/u/1630529?v=3&s=40')"> </div> <span class="name">
-    			      Er User
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            <div class="img"
+                                 style="background-image: url('https://avatars2.githubusercontent.com/u/1630529?v=3&s=40')"></div>
+                            <span class="name">
+    			      <?php echo $this->zfcUserDisplayName() ?>
     			    </span> </a>
                         <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <a class="dropdown-item" href="/logout"> <i class="fa fa-power-off icon"></i> Logout </a>
+                            <a class="dropdown-item" href="<?php echo $this->url('zfcuser/logout') ?>"> <i
+                                        class="fa fa-power-off icon"></i> <?php echo $this->translate('Logout'); ?></a>
                         </div>
                     </li>
                 </ul>
             </div>
         </header>
-        <asie class="sidebar">
+        <aside class="sidebar">
             <div class="sidebar-container">
                 <div class="sidebar-header">
                     <div class="brand">
-                        <div class="logo"> <span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span class="l l4"></span> <span class="l l5"></span> </div> LaCueva Admin </div>
+                        <div class="logo"><img src="/panel/assets/logo.png" alt=""></div>
+                        LaCueva Admin
+                    </div>
                 </div>
                 <nav class="menu">
                     <?php
@@ -58,7 +61,7 @@
                     ?>
                 </nav>
             </div>
-        </asie>
+        </aside>
         <article class="content dashboard-page">
             <section class="section">
                 <div class="row sameheight-container">
@@ -67,7 +70,8 @@
             </section>
         </article>
         <footer class="footer">
-                All rights reserved bitches &copy; <?php echo date('Y') ?> <a href="https://github.com/ukadev/mail">Link al repo</a> </li>
+            All rights reserved bitches &copy; <?php echo date('Y') ?> <a href="https://github.com/ukadev/mail">Link al
+                repo</a>
         </footer>
         <!-- /.modal -->
     </div>

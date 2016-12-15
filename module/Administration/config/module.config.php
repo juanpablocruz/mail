@@ -10,23 +10,39 @@ return array(
             array(
                 'label' => 'Dashboard',
                 'route' => 'admin',
-                'action' => 'index'
+                'action' => 'index',
+                'controllers' => [
+                    'Administration\Controller\Admin'
+                ]
             ),
             array(
                 'label' => 'Mail system',
                 'uri' => '/admin/mail',
+                'controllers' => [
+                    'MailPartials\Controller\MailPartials',
+                    'MailTemplates\Controller\MailTemplates'
+                ],
                 'pages' => array(
                     array(
                         'label' => 'Mails',
                         'uri' => '/admin/mail',
+                        'controllers' => [
+                            'MailTemplates\Controller\MailTemplates'
+                        ],
                     ),
                     array(
                         'label' => 'Templates',
                         'uri' => '/admin/mail/templates',
+                        'controllers' => [
+                            'MailTemplates\Controller\MailTemplates'
+                        ],
                     ),
                     array(
                         'label' => 'Partial Templates',
                         'uri' => '/admin/mail/partials',
+                        'controllers' => [
+                            'MailPartials\Controller\MailPartials',
+                        ],
                     ),
                 ),
             ),

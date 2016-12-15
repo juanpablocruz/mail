@@ -18,44 +18,49 @@ echo $this->flashMessenger()->render();
     <div class="row">
         <div class="col-md-12">
             <div class="card card-block">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th class="tright">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            if ($this->total > 0):
-                                foreach ($this->partials as $partial) : ?>
-                                    <tr>
-                                        <td><?php echo $partial['id'] ?></td>
-                                        <td><?php echo $partial['name'] ?></td>
-                                        <td class="tright">
-                                            <a class="btn btn-info btn-pill-left btn-secondary" href="<?php echo $this->url('partials/edit', ['id' => $partial['id']]) ?>">
-                                                <em class="fa fa-edit"></em>Edit</a>
-                                            <a class="btn btn-pill-right btn-danger remove_partial" href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal" data-id="<?php echo $partial['id'] ?>">
-                                                <em class="fa fa-trash-o"></em> Delete
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                endforeach;
-                            else:
-                                ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Tags</th>
+                            <th class="tright">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        if ($this->total > 0):
+                            foreach($this->partials as $partial): ?>
                                 <tr>
-                                    <td colspan="3">There are no results
+                                    <td><?php echo $partial['id'] ?></td>
+                                    <td><?php echo $partial['name'] ?></td>
+                                    <td><?php echo implode(json_decode($partial['tags'], true), ', ') ?></td>
+                                    <td class="tright">
+                                        <a class="btn btn-info btn-pill-left btn-secondary"
+                                           href="<?php echo $this->url('partials/edit', ['id' => $partial['id']]) ?>">
+                                            <em class="fa fa-edit"></em>Edit</a>
+                                        <a class="btn btn-pill-right btn-danger remove_partial"
+                                           href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal"
+                                           data-id="<?php echo $partial['id'] ?>">
+                                            <em class="fa fa-trash-o"></em> Delete
+                                        </a>
                                     </td>
                                 </tr>
                                 <?php
-                            endif;
+                            endforeach;
+                        else:
                             ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            <tr>
+                                <td colspan="3">There are no results
+                                </td>
+                            </tr>
+                            <?php
+                        endif;
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -98,8 +103,10 @@ $this->inlineScript()->captureEnd();
                 <p>Are you sure you want to delete the selected partial?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDeleteModal">Delete it!</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDeleteModal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDeleteModal">Delete it!
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancelDeleteModal">Cancel
+                </button>
             </div>
         </div>
 
