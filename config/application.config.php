@@ -19,8 +19,8 @@ return array(
         'Application',
         'Usuarios',
         'Administration',
-        'MailTemplates',
         'MailPartials',
+        'MailTemplates',
     ),
 
     'module_listener_options' => array(

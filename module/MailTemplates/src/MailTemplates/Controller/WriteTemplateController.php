@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Zend\Form\FormInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use MailTemplates\Model\Template;
-use MailPartials\Entity\Partials;
+use MailPartials\Entity\Partial;
 
 class WriteTemplateController extends AbstractActionController
 {
@@ -23,6 +23,9 @@ class WriteTemplateController extends AbstractActionController
   public function addAction()
   {
     $request = $this->getRequest();
+    $partials = $this->mailTemplateService->
+                getRepository('MailPartials\Entity\Partial')->findAll();
+    $this->templateForm->partialListData = $partials;
 
     if($request->isPost())
     {
@@ -38,7 +41,11 @@ class WriteTemplateController extends AbstractActionController
       {
         try {
           $id = $data->toArray()["partial"];
-          $p = $this->mailTemplateService->find('MailPartials\Entity\Partial',$id);
+          $partialList = json_decode($data->toArray()["partialList"]);
+          $partials = [];
+          $p = $this->mailTemplateService->getRepository('MailPartials\Entity\Partial')
+                                        ->findById($partialList);
+
           $data = $this->templateForm->getData();
           $data["partial"] = $p;
           $template->exchangeArray($data);
@@ -81,7 +88,7 @@ class WriteTemplateController extends AbstractActionController
         {
           $data = $request->getPost();
           $i = $data->toArray()["partial"];
-          $p = $this->mailTemplateService->find('MailTemplates\Model\Partial',$i);
+          $p = $this->mailTemplateService->find('MailPartials\Entity\Partial',$i);
           $template->setPartials([$p]);
           // \Zend\Debug\Debug::dump($template->getPartials());die();
 

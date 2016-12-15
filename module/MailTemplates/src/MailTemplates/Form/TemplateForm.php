@@ -4,15 +4,16 @@ namespace MailTemplates\Form;
 use Zend\Form\Form;
 use Doctrine\ORM\EntityManager;
 
-
 class TemplateForm extends Form
 {
   protected $entityManager;
+  public $partialListData;
+
   public function __construct(EntityManager $entityManager)
   {
     parent::__construct("template");
     $this->entityManager = $entityManager;
-
+    $this->partialListData = "aa";
   }
   public function init()
   {
@@ -23,6 +24,19 @@ class TemplateForm extends Form
     ]);
 
     $this->add([
+      'name' => 'partialList',
+      'type' => 'hidden',
+    ]);
+    $this->add([
+      'type' => 'submit',
+      'name' => 'submit',
+      'attributes' => [
+        'value' => 'Create new template',
+        'class' => 'btn btn-primary btn-sm rounded-s',
+      ]
+    ]);
+
+    $this->add([
       'type' => 'text',
       'name' => 'name',
       'options' => [
@@ -30,24 +44,6 @@ class TemplateForm extends Form
       ]
     ]);
 
-    $this->add([
-      'name' => 'partial',
-      'type' => 'DoctrineModule\Form\Element\ObjectSelect',
-      'options' => [
-        'object_manager'    => $this->entityManager,
-        'target_class'      => 'MailPartials\Entity\Partial',
-        'property'          => 'name',
-
-      ],
-    ]);
-
-    $this->add([
-      'type' => 'submit',
-      'name' => 'submit',
-      'attributes' => [
-        'value' => 'Create new template'
-      ]
-    ]);
   }
 
 
