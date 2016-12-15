@@ -14,19 +14,17 @@ class MailPartialsController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $partials = $objectManager
             ->getRepository('\MailPartials\Entity\Partial')
-            ->findBy(array(), array('id' => 'ASC'));
+            ->findById(array(1, 2));
 
         $partials_array = [];
         foreach ($partials as $partial) {
             $partials_array[] = $partial->getArrayCopy();
         }
 
-        $view = new ViewModel(array(
+        return [
             'partials' => $partials_array,
             'total' => count($partials_array)
-        ));
-
-        return $view;
+        ];
     }
 
     public function addAction()
@@ -41,15 +39,16 @@ class MailPartialsController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
                 $partial = new Partial();
+                $form->setData(['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
                 $partial->exchangeArray($form->getData());
 
                 $objectManager->persist($partial);
                 $objectManager->flush();
-                // Redirect to list of partials
-                return $this->redirect()->toRoute('partials');
             }
+        } else {
+            return ['form' => $form];
         }
-        return;
+        return $this->redirect()->toRoute('partials');
     }
 
     public function editAction()
@@ -87,6 +86,7 @@ class MailPartialsController extends AbstractActionController
                     return $this->redirect()->toRoute('partials');
                 }
                 try {
+                    $form->setData(['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
                     $partial->exchangeArray($form->getData());
 
                     $objectManager->persist($partial);
@@ -119,21 +119,27 @@ class MailPartialsController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $request = $this->getRequest();
-                if (!$id) {
-                    $this->flashMessenger()->addErrorMessage('Partial id doesn\'t set');
-                    return $this->redirect()->toRoute('partials');
-                }
-                try {
-                    $partial = $objectManager->find('\MailPartials\Entity\Partial', $id);
-                    $objectManager->remove($partial);
-                    $objectManager->flush();
-                } catch (\Exception $ex) {
-                    $this->flashMessenger()->addErrorMessage('Error while deleting data');
-                    return $this->redirect()->toRoute('partials');
-                }
+        if (!$id) {
+            $this->flashMessenger()->addErrorMessage('Partial id doesn\'t set');
+            return $this->redirect()->toRoute('partials');
+        }
+        try {
+            $partial = $objectManager->find('\MailPartials\Entity\Partial', $id);
+            $objectManager->remove($partial);
+            $objectManager->flush();
+        } catch (\Exception $ex) {
+            $this->flashMessenger()->addErrorMessage('Error while deleting data');
+            return $this->redirect()->toRoute('partials');
+        }
 
-                $this->flashMessenger()->addMessage(sprintf('Partial %d was succesfully deleted', $id));
+        $this->flashMessenger()->addMessage(sprintf('Partial %d was succesfully deleted', $id));
 
         return $this->redirect()->toRoute('partials');
+    }
+
+    private function getContentVars($content)
+    {
+        preg_match_all('/##(\w*)##/i', $content, $match);
+        return (isset($match[0])) ? $match[0] : null;
     }
 }

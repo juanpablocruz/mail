@@ -1,8 +1,6 @@
 <?php
-
 namespace MailPartials\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,14 +19,19 @@ class Partial
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=150, nullable=false)
      */
     protected $name;
 
     /**
-     * @ORM\Column(name="content", type="text", length=65535, nullable=false)
+     * @ORM\Column(type="text", length=65535, nullable=false)
      */
     protected $content;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $tags;
 
     /**
      * Get id.
@@ -98,6 +101,28 @@ class Partial
 
 
     /**
+     * Get tags.
+     *
+     * @param string $format
+     * @return mixed
+     */
+    public function getTags($format = 'json')
+    {
+        return ($format == 'json') ? $this->tags : json_decode($this->tags);
+    }
+
+    /**
+     * Set tags.
+     *
+     * @param string $tags
+     * @return void
+     */
+    public function setTags($tags)
+    {
+        $this->tags = json_encode($tags);
+    }
+
+    /**
      * Helper function.
      */
     public function exchangeArray($data)
@@ -116,5 +141,4 @@ class Partial
     {
         return get_object_vars($this);
     }
-
 }
