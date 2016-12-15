@@ -17,7 +17,6 @@ class MailTemplatesController extends AbstractActionController
 
     public function indexAction()
     {
-
         return ['templates' => $this->mailTemplateService->
                                 getRepository('MailTemplates\Model\Template')->findAll()
               ];
