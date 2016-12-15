@@ -29,7 +29,7 @@ class Partial
     protected $content;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=150, nullable=true)
      */
     protected $tags;
 
@@ -114,7 +114,7 @@ class Partial
     /**
      * Set tags.
      *
-     * @param string $tags
+     * @param array $tags
      * @return void
      */
     public function setTags($tags)

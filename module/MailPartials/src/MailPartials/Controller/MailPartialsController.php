@@ -14,7 +14,7 @@ class MailPartialsController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $partials = $objectManager
             ->getRepository('\MailPartials\Entity\Partial')
-            ->findById(array(1, 2));
+            ->findBy(array(), array('id' => 'ASC'));
 
         $partials_array = [];
         foreach ($partials as $partial) {
@@ -39,8 +39,8 @@ class MailPartialsController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
                 $partial = new Partial();
-                $form->setData(['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
-                $partial->exchangeArray($form->getData());
+                $partialData = array_merge($form->getData(), ['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
+                $partial->exchangeArray($partialData);
 
                 $objectManager->persist($partial);
                 $objectManager->flush();
@@ -86,8 +86,8 @@ class MailPartialsController extends AbstractActionController
                     return $this->redirect()->toRoute('partials');
                 }
                 try {
-                    $form->setData(['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
-                    $partial->exchangeArray($form->getData());
+                    $partialData = array_merge($form->getData(), ['tags' => json_encode($this->getContentVars($request->getPost()->get('content')))]);
+                    $partial->exchangeArray($partialData);
 
                     $objectManager->persist($partial);
                     $objectManager->flush();
