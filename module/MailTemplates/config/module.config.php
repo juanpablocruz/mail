@@ -12,7 +12,10 @@ return array(
     'form_elements' => [
       'factories' => [
           'MailTemplates\Form\TemplateForm' => "MailTemplates\Factory\TemplatesFormFactory"
-        ]
+        ],
+      'invokables' => [
+        'PartialList' => "MailTemplates\Form\Element\PArtialsElement",
+        ],
     ],
     'router' => array(
         'routes' => array(

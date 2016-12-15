@@ -12,6 +12,7 @@ namespace MailTemplates;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -28,6 +29,18 @@ class Module implements AutoloaderProviderInterface
                 ),
             ),
         );
+    }
+
+    public function getViewHelperConfig()
+    {
+      return [
+        'aliases'=> [
+          'PartialList'   => MailTemplates\Form\View\Helper\PartialListElement::class,
+        ],
+        'factories' => [
+          MailTemplates\Form\View\Helper\PartialListElement::class  =>InvokableFactory::class,
+        ]
+      ];
     }
 
     public function getConfig()
