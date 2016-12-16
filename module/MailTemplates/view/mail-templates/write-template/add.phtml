@@ -1,80 +1,79 @@
 <style>
-.partials-dest {
-  position:relative;
-  min-width:10em;
-  min-height:10em;
-  z-index: 0;
-  display: inline-block;
-  vertical-align: top;
-}
-.partials-dest ul {
-  padding: 0;
-  list-style: none;
-}
-.partialList {
-  border-right: 2px solid #999;
-  margin-right: 1em;
-}
-.partial-element {
-  z-index: 2;
-  cursor: hand;
-}
-.partialList .partial-element div{
-  display: inline-block;
-}
-.partialList .render-element-partial {
-  font-size: 30%;
-  width: 3rem;
-}
-.render-element-partial img {
-  width: 100%;
-}
+.partials-dest {  position:relative;  min-width:10em;  min-height:10em;  z-index: 0;  display: inline-block;  vertical-align: top;}
+.partials-dest ul {  padding: 0;  list-style: none;}
+.partialList {  border-right: 2px solid #999;  margin-right: 1em;}
+.partial-element {  z-index: 2;  cursor: hand;}
+.partialList .partial-element div{  display: inline-block;}
+.partialList .render-element-partial {  font-size: 30%;  width: 3rem;}
+.render-element-partial img {  width: 100%;}
 .partialList .render-element-partial h1,
 .partialList .render-element-partial h2,
 .partialList .render-element-partial h3,
 .partialList .render-element-partial h4,
-.partialList .render-element-partial h5 {
-  font-size: 30%;
-}
-.partials-added .partial-name {
-  display: none;
-}
-.partials-added {
-  min-width: 70%;
-  padding: 1em;
-}
-.hovering {
-  border: 5px dashed #999999;
-}
+.partialList .render-element-partial h5 {  font-size: 30%;}
+.partials-added .partial-name {  display: none;}
+.partials-added {  min-width: 70%;  padding: 1em;}
+.hovering {  border: 5px dashed #999999;}
 </style>
 <?php
-
 $form = $this->form;
 // $form->setAttribute('action', $this->url());
+$idInput = $this->form->get("id");
+$partialListInput =  $this->form->get("partialList");
+$submitBtnInput = $this->form->get("submit");
+$nameInput = $this->form->get("name");
 $form->prepare();
 echo $this->form()->openTag($form);
-echo $this->formCollection($form);
-?>
-<div class="partialList partials-dest">
-  <ul>
-<?php
-foreach($form->partialListData as $key => $value) {
-  echo "<li class='partial-element' attr-id='".$value->getId()."'>
-        <div class='render-element-partial'>"
-        .
-        $value->getContent()
-        .
-        "</div><div class='partial-name'>"
-        .
-        $value->getName()
-        ."</div></li>";
-}
-?>
-</ul>
-</div>
 
-<div class="partials-dest partials-added" id="partials-added">
-  <ul></ul>
+echo $this->formHidden($idInput);
+echo $this->formHidden($partialListInput);
+?>
+<div class="row">
+  <div class="col-md-2">
+    <div class="row">
+      <div class="col-md-12">
+      <?php
+      echo $this->formSubmit($submitBtnInput);
+      ?>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 partialList partials-dest">
+        <ul>
+          <?php
+          foreach($form->partialListData as $key => $value) {
+            echo "<li class='partial-element' attr-id='".$value->getId()."'>
+            <div class='render-element-partial'>"
+            .
+            $value->getContent()
+            .
+            "</div><div class='partial-name'>"
+            .
+            $value->getName()
+            ."</div></li>";
+          }
+          ?>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1"></div>
+  <div class="col-md-8">
+    <div class="row">
+      <div class="col-md-12">
+        <?php
+        echo "<h4>".$this->formLabel($nameInput)."</h4>";
+        echo $this->formElement($nameInput);
+        ?>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 partials-dest partials-added" id="partials-added">
+        <ul></ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1"></div>
 </div>
 <?php
 // \Zend\Debug\Debug::dump($form->partialListData);
@@ -90,18 +89,92 @@ echo <<<JS
       draggableCount = draggable.length,
       i, originalPos,
       targetDest = document.querySelectorAll('.partials-dest'),
-      dropzone = document.querySelector('#partials-added');
+      dropzone = document.querySelector('#partials-added'),
+      originCont,elementHover;
+
+
+  function getStyle(x,styleProp)
+  {
+        if (window.getComputedStyle)
+            var y = document.defaultView.getComputedStyle(x,null).getPropertyValue(styleProp);
+        else if (x.currentStyle)
+            var y = x.currentStyle[styleProp];
+        return y;
+  }
+  var getParentsUntil = function ( elem, parent, selector ) {
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+        Element.prototype.matches =
+            Element.prototype.matchesSelector ||
+            Element.prototype.mozMatchesSelector ||
+            Element.prototype.msMatchesSelector ||
+            Element.prototype.oMatchesSelector ||
+            Element.prototype.webkitMatchesSelector ||
+            function(s) {
+                var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                    i = matches.length;
+                while (--i >= 0 && matches.item(i) !== this) {}
+                return i > -1;
+            };
+    }
+    // Setup parents array
+    var parents = [];
+    // Get matching parent elements
+    for ( ; elem && elem !== document; elem = elem.parentNode ) {
+        if ( parent ) {
+            if ( elem.matches( parent ) ) {
+              return elem;
+              break;
+            }
+        }
+        if ( selector ) {
+            if ( elem.matches( selector ) ) {
+                return elem;
+            }
+            break;
+        }
+
+    }
+    return parents;
+  };
 
   function startDrag(evt) {
     evt.preventDefault();
-    originalPos = {x:this.offsetLeft, y:this.offsetTop};
+    originalPos = { x:this.offsetLeft, y:this.offsetTop};
     this.style.position = "absolute";
     var diffX = evt.clientX - this.offsetLeft,
     diffY = evt.clientY - this.offsetTop,
     that = this;
-    console.log(dropzone);
     dropzone.classList.toggle("hovering");
+    originCont = this.parentNode.parentNode;
 
+
+    var dest_array = [
+      { origin: "partialList",
+        dest :"partials-added",
+        func: function(that, targetDest){
+          that.style.left = "0px";
+          that.style.top = "0px";
+          targetDest.querySelector("ul").appendChild(that.cloneNode(true));
+          return true;
+        }
+      },
+      { origin: "partials-added",
+        dest :"partials-added",
+        func: function(that, targetDest){
+          var parentelm = getParentsUntil(elementHover, '.partial-element');
+          var lis = parentelm.parentNode.getElementsByTagName("li");
+          var index = [].slice.call(parentelm.parentNode.children).indexOf(parentelm);
+          var el,elemTemp;
+          elemTemp = that;
+          that.style.left = "0px";
+          that.style.top = "0px";
+
+          parentelm.parentNode.insertBefore(that,parentelm);
+          return false;
+        }
+      },
+    ]
 
     function moveAlong(evt) {
         evt.preventDefault();
@@ -109,6 +182,10 @@ echo <<<JS
         var top = parseInt(evt.clientY - diffY);
         that.style.left = left + 'px';
         that.style.top = top + 'px';
+        var zindex = getStyle(that,"z-index");
+        that.style.zIndex = 0;
+        elementHover = document.elementFromPoint(evt.clientX, evt.clientY);
+        that.style.zIndex = zindex;
     }
 
     function stopDrag() {
@@ -127,14 +204,14 @@ echo <<<JS
             dH = dY + tviw.height,
             pX = eviw.x,
             pY = eviw.y;
-            console.log(targetDest[i].classList);
             if(pX > dX && pX < dW &&
-              pY > dY && pY < dH &&
-              targetDest[i].classList.contains("partials-added")) {
-                that.style.left = "0px";
-                that.style.top = "0px";
-                targetDest[i].querySelector("ul").appendChild(that.cloneNode(true));
-                that
+              pY > dY && pY < dH) {
+                for(var j = 0; j < dest_array.length; j++){
+                  if(originCont.classList.contains(dest_array[j].origin) &&
+                      targetDest[i].classList.contains(dest_array[j].dest)){
+                    inside = dest_array[j].func(that, targetDest[i]);
+                  }
+                }
                 inside = true;
                 break;
               }
@@ -151,8 +228,7 @@ echo <<<JS
 }
 
 if (draggableCount > 0)
-  for (i = 0; i < draggableCount; i ++)
-    draggable[i].addEventListener('mousedown', startDrag);
+    $(document).on('mousedown','.partial-element',startDrag);
 
 }(document));
   $("#template").on("submit",function(e) {
