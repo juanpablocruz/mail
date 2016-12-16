@@ -90,7 +90,7 @@ echo <<<JS
       i, originalPos,
       targetDest = document.querySelectorAll('.partials-dest'),
       dropzone = document.querySelector('#partials-added'),
-      originCont,elementHover;
+      originCont,elementHover, placeholder;
 
 
   function getStyle(x,styleProp)
@@ -148,7 +148,11 @@ echo <<<JS
     dropzone.classList.toggle("hovering");
     originCont = this.parentNode.parentNode;
 
-
+    placeholder = document.createElement("li");
+    // placeholder.appendChild(document.createTextNode("&nbsp;"));
+    var box = that.getBoundingClientRect();
+    placeholder.style.cssText = 'width:'+box.width+"px;height:"+box.height+"px;";
+    this.parentNode.insertBefore(placeholder,this);
     var dest_array = [
       { origin: "partialList",
         dest :"partials-added",
@@ -193,6 +197,7 @@ echo <<<JS
         document.removeEventListener('mouseup', stopDrag);
         that.style.position = "relative";
         dropzone.classList.toggle("hovering");
+        that.parentNode.removeChild(placeholder);
         if(targetDest.length>0) {
           var inside = false;
           for(i = 0; i < targetDest.length && !inside; i++) {
